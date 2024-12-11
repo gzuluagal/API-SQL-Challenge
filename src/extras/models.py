@@ -7,7 +7,7 @@ class Jobs(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     job = Column(String, nullable=False)
 
-class Employee(Base):
+class Employees(Base):
     __tablename__ = 'Employees'
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
