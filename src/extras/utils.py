@@ -46,7 +46,7 @@ def get_existing_ids(
         data: List[Dict],
         model: Type,
         db: Session = Depends(get_db)
-) -> List:
+) -> list[dict]:
 
     existing_ids: List[int] = [
         int(table.id)
@@ -61,7 +61,7 @@ def get_existing_ids(
     return new_data
 
 
-def validate_rows(data: List[Dict], model: Type) -> List[Dict]:
+def validate_rows(data: List[Dict], model: Type) -> list[dict]:
     valid_rows = []
     for row in data:
         try:
@@ -101,7 +101,7 @@ def validate_rows(data: List[Dict], model: Type) -> List[Dict]:
     return valid_rows
 
 
-def validate_row_limit(data: List[Dict], limit: int = 999):
+def validate_row_limit(data: List[Dict], limit: int = 999) -> list[dict]:
     """Valida que el nnmero de filas no exceda el limite."""
     if len(data) > limit:
         logger.warning(
