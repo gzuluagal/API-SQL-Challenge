@@ -13,6 +13,16 @@ router = APIRouter(
 
 @router.get('/')
 def get_employees(db: Session = Depends(get_db)):
+    """
+    Recupera la lista completa de empleados de la base de datos.
+
+    Args:
+        db (Session): Sesión de la base de datos proporcionada mediante `Depends(get_db)`.
+
+    Returns:
+        List[models.Employees]: Lista de todos los empleados almacenados en la base de datos.
+
+    """
     employees = db.query(models.Employees).all()
     return employees
 
@@ -24,7 +34,20 @@ def get_employees(db: Session = Depends(get_db)):
 def create_employees(
     employee: schemas.BaseEmployees,
     db: Session = Depends(get_db)
-) -> Dict:
+) -> schemas.BaseEmployees:
+    """
+    Crea un nuevo registro de empleado en la base de datos.
+
+    Args:
+        employee (schemas.BaseEmployees): Información del empleado a crear.
+        db (Session): Sesión de la base de datos proporcionada mediante `Depends(get_db)`.
+
+    Returns:
+        schemas.EmployeesResponse: Datos del empleado creado.
+
+    Raises:
+        HTTPException: Si ocurre algún error durante la creación.
+    """
     new_employee = models.Employees(**employee.model_dump())
     db.add(new_employee)
     db.commit()
@@ -38,7 +61,21 @@ def create_employees(
     status_code=status.HTTP_200_OK,
     response_model=schemas.EmployeesResponse
 )
-def get_employee(id: int, db: Session = Depends(get_db)) -> Dict:
+def get_employee(id: int, db: Session = Depends(get_db)):
+    """
+    Recupera un empleado específico de la base de datos según su ID.
+
+    Args:
+        id (int): ID del empleado a recuperar.
+        db (Session): Sesión de la base de datos proporcionada mediante `Depends(get_db)`.
+
+    Returns:
+        schemas.EmployeesResponse: Datos del empleado.
+
+    Raises:
+        HTTPException:
+            - 404: Si el empleado con el ID proporcionado no existe.
+    """
     employee = db.query(models.Employees).filter(
         models.Employees.id == id).first()
 
@@ -52,8 +89,18 @@ def get_employee(id: int, db: Session = Depends(get_db)) -> Dict:
 
 
 @router.put('/{id}', response_model=schemas.EmployeesResponse)
-def update_employee(id: int, employee: schemas.BaseEmployees, db: Session = Depends(get_db)):
+def update_employee(id: int, employee: schemas.BaseEmployees, db: Session = Depends(get_db)) -> schemas.EmployeesResponse:
+    """
+    Actualiza la información de un empleado existente.
 
+    Args:
+        id (int): ID del empleado a actualizar.
+        employee (schemas.BaseEmployees): Datos nuevos para actualizar el registro.
+        db (Session): Sesión de la base de datos proporcionada mediante `Depends(get_db)`.
+
+    Returns:
+        schemas.EmployeesResponse: Datos actualizados del empleado.
+    """
     employee_query = db.query(models.Employees).filter(
         models.Employees.id == id)
 

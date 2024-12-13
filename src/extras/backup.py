@@ -50,8 +50,7 @@ def backup_table_to_avro(model: Type, output_dir: str, db: Session = Depends(get
         {"name": column.name, "type": map_column_type(column.type)}
         for column in model.__table__.columns
     ]
-    print("#"*100)
-    print(schema_fields)
+
     avro_schema = {
         "type": "record",
         "name": f"{table_name}_backup",

@@ -9,7 +9,15 @@ router = APIRouter()
 
 @router.post('/csv', status_code=status.HTTP_201_CREATED)
 def upload_csv(db: Session = Depends(get_db)):
+    """
+    Endpoint para cargar datos desde archivos CSV a la base de datos.
 
+    Args:
+        db (Session): Sesión de la base de datos proporcionada mediante la dependencia `Depends(get_db)`.
+
+    Returns:
+        dict: Respuesta indicando el éxito de la operación.
+    """
     try:
         for model in MODELS:
             if not model['path'].endswith('.csv'):

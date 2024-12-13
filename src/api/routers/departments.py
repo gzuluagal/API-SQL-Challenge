@@ -14,6 +14,16 @@ router = APIRouter(
 
 @router.get('/', response_model=List[schemas.DepartementsResponse])
 def get_departments(db: Session = Depends(get_db)) -> List[Dict]:
+    """
+    Obtiene todos los departamentos de la base de datos.
+
+    Args:
+        db (Session): Sesión de la base de datos proporcionada mediante la dependencia `Depends(get_db)`.
+
+    Returns:
+        List[schemas.DepartementsResponse]: Lista de departamentos obtenidos de la base de datos.
+
+    """
     departments = db.query(models.Departments).all()
     return departments
 
@@ -22,7 +32,17 @@ def get_departments(db: Session = Depends(get_db)) -> List[Dict]:
     '/{id}', status_code=status.HTTP_200_OK,
     response_model=schemas.DepartementsResponse
 )
-def get_department(id: int, db: Session = Depends(get_db)) -> Dict:
+def get_department(id: int, db: Session = Depends(get_db)) -> schemas.DepartementsResponse:
+    """
+    Obtiene un departamento específico de la base de datos mediante su ID.
+
+    Args:
+        id (int): ID del departamento a obtener.
+        db (Session): Sesión de la base de datos proporcionada mediante la dependencia `Depends(get_db)`.
+
+    Returns:
+        schemas.DepartementsResponse: Información del departamento.
+    """
     department = db.query(
         models.Departments
     ).filter(models.Departments.id == id).first()
@@ -37,7 +57,17 @@ def get_department(id: int, db: Session = Depends(get_db)) -> Dict:
 
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.DepartementsResponse)
-def create_department(department: schemas.BaseDepartments, db: Session = Depends(get_db)) -> Dict:
+def create_department(department: schemas.BaseDepartments, db: Session = Depends(get_db)) -> schemas.DepartementsResponse:
+    """
+    Crea un nuevo departamento en la base de datos.
+
+    Args:
+        department (schemas.BaseDepartments): Datos del nuevo departamento a crear.
+        db (Session): Sesión de la base de datos proporcionada mediante la dependencia `Depends(get_db)`.
+
+    Returns:
+        Dict: Información del departamento creado.
+    """
     new_department = models.Departments(**department.model_dump())
     db.add(new_department)
     db.commit()
@@ -47,6 +77,16 @@ def create_department(department: schemas.BaseDepartments, db: Session = Depends
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_department(id: int, db: Session = Depends(get_db)):
+    """
+    Elimina un departamento específico de la base de datos mediante su ID.
+
+    Args:
+        id (int): ID del departamento a eliminar.
+        db (Session): Sesión de la base de datos proporcionada mediante la dependencia `Depends(get_db)`.
+
+    Returns:
+        Response: Respuesta con código de estado 204 (No Content) si la eliminación fue exitosa.
+    """
     department = db.query(models.Departments).filter(
         models.Departments.id == id)
 
@@ -63,10 +103,21 @@ def delete_department(id: int, db: Session = Depends(get_db)):
 
 @router.put('/{id}', response_model=schemas.DepartementsResponse)
 def update_department(
-        id: int,
-        department: schemas.BaseDepartments,
-        db: Session = Depends(get_db)) -> Dict:
+    id: int,
+    department: schemas.BaseDepartments,
+    db: Session = Depends(get_db)
+) -> schemas.DepartementsResponse:
+    """
+    Actualiza la información de un departamento específico en la base de datos.
 
+    Args:
+        id (int): ID del departamento a actualizar.
+        department (schemas.BaseDepartments): Nuevos datos del departamento.
+        db (Session): Sesión de la base de datos proporcionada mediante la dependencia `Depends(get_db)`.
+
+    Returns:
+        schemas.DepartementsResponse: Información del departamento actualizado.
+    """
     department_query = db.query(models.Departments).filter(
         models.Departments.id == id)
 

@@ -10,8 +10,16 @@ router = APIRouter()
 
 
 @router.post('/backups', status_code=status.HTTP_201_CREATED)
-def upload_csv(db: Session = Depends(get_db)) -> dict[str, str]:
+def backup_avro(db: Session = Depends(get_db)) -> dict[str, str]:
+    """
+    Crea respaldos en formato Avro de todas las tablas definidas en `MODELS`.
 
+    Args:
+        db (Session): Sesión de la base de datos proporcionada por FastAPI.
+
+    Returns:
+        dict[str, str]: Mensaje de éxito indicando que los respaldos se crearon con éxito.
+    """
     try:
         for model in MODELS:
             backup_table_to_avro(model['model'], BACKUP_DIR, db=db)
@@ -26,13 +34,19 @@ def upload_csv(db: Session = Depends(get_db)) -> dict[str, str]:
 
 @router.post("/restore", status_code=status.HTTP_201_CREATED)
 def restore_from_avro(db: Session = Depends(get_db)) -> dict[str, str]:
-    # Insertar los registros en la tabla
+    """
+    Restaura registros desde archivos Avro a las tablas correspondientes.
+    Args:
+        db (Session): Sesión de la base de datos proporcionada por FastAPI.
+
+    Returns:
+        dict[str, str]: Mensaje de éxito indicando que la base de datos fue restaurada.
+    """
     for model in MODELS:
         records: list[dict] = restore_table_from_avro(
             model['model'], model['backup_path'])
         try:
 
-            # data = [record for record in records]
             deleted_records: list[dict] = get_existing_ids(
                 records, model['model'], db=db)
             valid_records: list[dict] = validate_rows(
@@ -48,6 +62,6 @@ def restore_from_avro(db: Session = Depends(get_db)) -> dict[str, str]:
         except IntegrityError as e:
             print(
                 f"Error de integridad al restaurar registro: {valid_records}. Error: {e}")
-            db.rollback()  # Evita que el error afecte a otros registros
+            db.rollback()
         print(f"Se restauraron los registros desde {model['backup_path']}.")
     return {'response': 'Base de datos restaurada con exito'}

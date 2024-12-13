@@ -13,6 +13,15 @@ logger = custom_logger()
 
 
 def get_schema(path: str) -> List:
+    """
+    Devuelve el esquema correspondiente basado en el archivo proporcionado.
+
+    Args:
+        path (str): Ruta o nombre del archivo que contiene los datos.
+
+    Returns:
+        List: Lista de nombres de campos correspondientes al esquema.
+    """
     if 'departments' in path:
         schema = list(schemas.BaseDepartments.__annotations__.keys())
     elif 'jobs' in path:
@@ -25,6 +34,15 @@ def get_schema(path: str) -> List:
 
 
 def parse_csv(path: str) -> dict:
+    """
+    Parsea un archivo CSV en una lista de diccionarios con base en un esquema definido.
+
+    Args:
+        path (str): Ruta al archivo CSV que se desea parsear.
+
+    Returns:
+        dict: Lista de diccionarios, donde cada diccionario representa una fila del CSV mapeada al esquema.
+    """
     file_path = Path(path)
 
     if not file_path.exists():
@@ -47,7 +65,17 @@ def get_existing_ids(
         model: Type,
         db: Session = Depends(get_db)
 ) -> list[dict]:
+    """
+    Filtra los registros que ya existen en la base de datos según sus IDs.
 
+    Args:
+        data (List[Dict]): Lista de diccionarios que representan los registros a validar.
+        model (Type): Modelo SQLAlchemy correspondiente a la tabla de la base de datos.
+        db (Session): Sesión activa de la base de datos.
+
+    Returns:
+        list[dict]: Lista de diccionarios con los registros que no tienen ID en la base de datos.
+    """
     existing_ids: List[int] = [
         int(table.id)
         for table in db.query(model.id).all()
@@ -62,6 +90,16 @@ def get_existing_ids(
 
 
 def validate_rows(data: List[Dict], model: Type) -> list[dict]:
+    """
+    Valida los registros según las restricciones definidas en el modelo SQLAlchemy.
+
+    Args:
+        data (List[Dict]): Lista de registros a validar, donde cada registro es un diccionario.
+        model (Type): Modelo SQLAlchemy que define la estructura y restricciones de la tabla.
+
+    Returns:
+        list[dict]: Lista de registros válidos que cumplen con las restricciones del modelo.
+    """
     valid_rows = []
     for row in data:
         try:
@@ -102,7 +140,19 @@ def validate_rows(data: List[Dict], model: Type) -> list[dict]:
 
 
 def validate_row_limit(data: List[Dict], limit: int = 999) -> list[dict]:
-    """Valida que el nnmero de filas no exceda el limite."""
+    """
+    Valida que el número de filas en la lista no exceda el límite permitido.
+
+    Args:
+        data (List[Dict]): Lista de registros a validar.
+        limit (int, opcional): Límite máximo permitido de filas. Por defecto es 999.
+
+    Returns:
+        list[dict]: Lista con un máximo de `limit` filas.
+
+    Logs:
+        - Genera una advertencia si la cantidad de filas en `data` excede el límite.
+    """
     if len(data) > limit:
         logger.warning(
             (f"El numero de filas en el archivo CSV({len(data)}) excede el limite permitido de {limit}."
