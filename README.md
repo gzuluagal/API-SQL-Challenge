@@ -10,41 +10,41 @@ API-SQL-Challenge/
 ├── src/
 │   ├── api/
 │   │   ├── routers/
-│   │   │   ├── backups.py
-│   │   │   ├── departments.py
-│   │   │   ├── employees.py
-│   │   │   ├── files.py
-│   │   │   ├── jobs.py
-│   │   │   ├── queries.py
-│   │   │   └── __init__.py
-│   ├── backups/
-│   │   ├── Departments.avro
-│   │   ├── Employees.avro
-│   │   ├── Jobs.avro
-│   ├── data/
-│   │   ├── departments.csv
-│   │   ├── hired_employees.csv
-│   │   ├── jobs.csv
-│   ├── extras/
-│   │   ├── __init__.py
-│   │   ├── backup.py
-│   │   ├── constants.py
-│   │   ├── database.py
-│   │   ├── logger.py
-│   │   ├── models.py
-│   │   ├── schemas.py
-│   │   ├── utils.py
-│   ├── sql/
-│   │   ├── __init__.py
-│   │   ├── queries.py
-│   ├── main.py
-├── .env
-├── .gitignore
-├── api_logs.log
-├── Dockerfile
-├── pytest.ini
-├── requirements.txt
-└── README.md
+│   │   │   ├── backups.py      
+│   │   │   ├── departments.py  
+│   │   │   ├── employees.py    
+│   │   │   ├── files.py        
+│   │   │   ├── jobs.py         
+│   │   │   ├── queries.py     
+│   │   │   └── __init__.py    
+│   ├── backups/               
+│   │   ├── Departments.avro   
+│   │   ├── Employees.avro     
+│   │   ├── Jobs.avro           
+│   ├── data/                   
+│   │   ├── departments.csv     
+│   │   ├── hired_employees.csv 
+│   │   ├── jobs.csv            
+│   ├── extras/                 
+│   │   ├── __init__.py         
+│   │   ├── backup.py           
+│   │   ├── constants.py        
+│   │   ├── database.py         
+│   │   ├── logger.py           
+│   │   ├── models.py           
+│   │   ├── schemas.py          
+│   │   ├── utils.py            
+│   ├── sql/                    
+│   │   ├── __init__.py         
+│   │   ├── queries.py          
+│   ├── main.py                 
+├── .env                        
+├── .gitignore                  
+├── api_logs.log                
+├── Dockerfile                  
+├── pytest.ini                  
+├── requirements.txt            
+└── README.md                   
 
 ## Installation
 
