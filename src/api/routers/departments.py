@@ -76,8 +76,10 @@ def update_department(
             detail=f'Department con el id {id}, no se encontro'
         )
 
-    department_query.update(department.model_dump(),
-                            synchronize_session=False)
+    department_query.update(
+        department.model_dump(),
+        synchronize_session=False
+    )
     db.commit()
 
     return department_query.first()
